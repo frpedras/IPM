@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Food Cravings</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="name">Nome </string>
+    <string name="email">E-mail</string>
+    <string name="Bemail">Associar e-mail</string>
+    <string name="Brecover">Recuperar</string>
+    <string name="Bsave">Guardar</string>
+    <string name="Bplaygame">Iniciar Jogo</string>
+    <string name="Bconfigurations">Configurações</string>
+    <string name="Bchangename">Mudar Nome</string>
+    <string name="Bcredits">Créditos</string>
+    <string name="welcomeuser">Bem-vindo utilizador</string>
+    <string name="dificulty">Dificuldade</string>
+    <string name="volume">Volume</string>
+    <string name="easy">Fácil</string>
+    <string name="medium">Médio</string>
+    <string name="hard">Difícil</string>
+    <string name="easySelected">Fácil \\u2713</string>
+    <string name="background">Imagem de Fundo</string>
+    <string name="findImage">Procurar Imagem</string>
+    <string name="save">Guardar</string>
+    <string name="selectfood">Selecionar alimentos</string>
+    <string name="alerts">Alertas</string>
+    <string name="statistics">Estatísticas</string>
+    <string name="welcome">"Bem vindo "</string>
+    <string name="paramfood">Parametrizar alimentos</string>
+    <string name="add">Adicionar</string>
+    <string name="remove">Remover</string>
+    <string name="paramlevel">Parametrizar nível</string>
+    <string name="createfood">Criar alimento</string>
+</resources>

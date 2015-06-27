@@ -1,0 +1,65 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".Menu"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#ffffffff">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/welcomeuser"
+        android:id="@+id/TVwelcome"
+        android:layout_gravity="right" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/app_name"
+        android:id="@+id/textView2"
+        android:layout_gravity="center"
+        android:textSize="30dp"
+        android:textStyle="bold|italic"
+        android:paddingBottom="133dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Bplaygame"
+        android:id="@+id/Bplaygame"
+        android:layout_marginBottom="10dp"
+        android:width="200dp"
+        android:onClick="playGame"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Bconfigurations"
+        android:id="@+id/Bconfigurations"
+        android:layout_marginBottom="10dp"
+        android:width="200dp"
+        android:onClick="configurations" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Bchangename"
+        android:id="@+id/Bchangename"
+        android:layout_marginBottom="10dp"
+        android:width="200dp"
+        android:onClick="changeName" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Bcredits"
+        android:id="@+id/Bcredits"
+        android:layout_marginBottom="10dp"
+        android:width="200dp"/>
+
+</LinearLayout>
