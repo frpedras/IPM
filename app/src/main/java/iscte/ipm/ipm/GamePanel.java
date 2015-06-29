@@ -100,6 +100,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
+        event.setLocation(event.getX()/2,event.getY()/2);
+
         if ((nLevelActual+1<levels.size()) && levelActual.isEmpty()) {
             if(nLevelActual==0 && levels.get(0).getPAcertos()>(int)(100*((double)acertos/(double) foodTotalLevel))) {
                 levels.get(0).reset();
