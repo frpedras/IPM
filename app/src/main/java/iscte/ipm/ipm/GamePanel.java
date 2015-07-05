@@ -2,6 +2,7 @@ package iscte.ipm.ipm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,6 +11,8 @@ import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -28,10 +31,11 @@ import java.util.LinkedList;
 /**
  * Created by Jorge on 24-05-2015.
  */
+
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
-    public static final int WIDTH = 540;
-    public static final int HEIGHT = 960;
+    public int WIDTH;
+    public int HEIGHT;
     private MainThread thread;
     private BackGround bg;
     private LinkedList<Level> levels = new LinkedList<Level>();
@@ -42,17 +46,25 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private long removeTime;
     private LinkedList<Food> levelActual=new LinkedList<Food>();
     private boolean exportado=false;
-    private long inicialGameTime;
+    private long inicialGameTime,deltaTimeTotal;
+
+
+
     private MediaPlayer mp;
+
 
     public GamePanel(Context context) {
         super(context);
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        WIDTH = metrics.widthPixels;
+        HEIGHT = metrics.heightPixels;
         getHolder().addCallback(this);
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
         v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         mp=  MediaPlayer.create(context, R.raw.glass_ping);
         inicialGameTime= System.currentTimeMillis();
+
     }
 
     @Override
@@ -62,7 +74,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         boolean retry = true;
-        bg.update();
         while (retry) {
             try {
                 thread.setRunning(false);
@@ -78,7 +89,30 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
-        bg = new BackGround(BitmapFactory.decodeResource(getResources(), R.drawable.bg_white));
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String bgNumber, bgPath;
+        try {
+            bgNumber = sharedPref.getString("bgNumber", null);
+        } catch (Exception e) {bgNumber="1";}
+
+        try {
+            bgPath = sharedPref.getString("bg", null);
+        } catch (Exception e) {bgPath="";}
+
+        if (bgNumber.equals("1"))
+            bg = new BackGround(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_white),WIDTH,HEIGHT,true));
+        else if (bgNumber.equals("2"))
+            bg = new BackGround(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_wood01),WIDTH,HEIGHT,true));
+        else if (bgNumber.equals("3"))
+            bg = new BackGround(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.black),WIDTH,HEIGHT,true));
+        else if (bgNumber.equals("4")) {
+            try {
+                bg = new BackGround( Bitmap.createScaledBitmap(BitmapFactory.decodeFile(bgPath),1000,1000,true));
+            }catch (Exception e){
+                bg = new BackGround(BitmapFactory.decodeResource(getResources(), R.drawable.bg_white));
+            }
+        }
+
         Level level0 = new Level(this,2000,100,0);
         level0.makeTutorial();
         levels.add(level0);
@@ -100,7 +134,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        event.setLocation(event.getX()/2,event.getY()/2);
+
+        event.setLocation(event.getX(),event.getY());
 
         if ((nLevelActual+1<levels.size()) && levelActual.isEmpty()) {
             if(nLevelActual==0 && levels.get(0).getPAcertos()>(int)(100*((double)acertos/(double) foodTotalLevel))) {
@@ -108,9 +143,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 nLevelActual--;
                 score=0;
             }
+
             if(nLevelActual>0 && levels.get(nLevelActual).getPAcertos()>(int)(100*((double)acertos/(double) foodTotalLevel))){
                 nLevelActual=levels.size();
             }
+
             if(nLevelActual+1<levels.size()) {
                 nLevelActual++;
                 actualizaLevelActual(levels.get(nLevelActual));
@@ -121,8 +158,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
-
         if ((nLevelActual<levels.size()) && !levelActual.isEmpty() && levelActual.getFirst().getRectangle().contains((int) event.getX(), (int) event.getY())) {
+
             if (levelActual.getFirst().isBad() && levelActual.getFirst().getFt()!=FoodType.SCORE) {
                 levelActual.removeFirst();
                 removeTime=System.currentTimeMillis();
@@ -145,11 +182,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
-        if (exportado){
-            Intent i = new Intent(super.getContext(), MenuPrincipal.class);
-            super.getContext().startActivity(i);
-        }
-
         return super.onTouchEvent(event);
     }
 
@@ -168,7 +200,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 fpoints.add(new FoodPoint(false, levelActual.getFirst().getX()-100, levelActual.getFirst().getY(), this));
 
             }
+            deltaTimeTotal+=(System.currentTimeMillis()-removeTime);
             removeTime=System.currentTimeMillis();
+
             levelActual.removeFirst();
             foodTotalLevel++;
         }
@@ -260,10 +294,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             canvas.drawText("Toque para continuar", 25, ((HEIGHT / 2) + 200), paint);
         }else {
             canvas.drawText("Fim do Jogo!", 90, ((HEIGHT / 2) - 100), paint);
-            canvas.drawText("Pontos: " + score, 110, ((HEIGHT / 2) + 50), paint);
+            canvas.drawText("Pontos: " + score , 110, ((HEIGHT / 2) + 50), paint);
             if(!exportado)
                 export();
-
         }
 
     }
@@ -279,7 +312,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
         String date = df.format(Calendar.getInstance().getTime());
         String columnString = "\"Jogador\",\"DATA\",\"tempo_utilizacao\",\"dados\",\"alimentos_selecionados\",\"pontuacao\",\"acertos\",\"tempo_reacao\",";
-        String dataString = "\"" + "Jogador1" + "\",\"" + date + "\",\"" + (System.currentTimeMillis()-inicialGameTime)/1000+"s" + "\",\"" + "null" + "\",\"" + "null" + "\",\"" + score + "\",\"" + acertosTotal + "\",\"" + "null" + "\"";
+        String dataString = "\"" + "Jogador1" + "\",\"" + date + "\",\"" + (System.currentTimeMillis()-inicialGameTime)/1000+"s" + "\",\"" + "dados" + "\",\"" + "todos" + "\",\"" + score + "\",\"" + acertosTotal + "\",\"" + (deltaTimeTotal/foodTotal) + "\"";
         String combinedString = columnString + "\n" + dataString;
 
         File file = null;
@@ -305,7 +338,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 e.printStackTrace();
             }
         }
-        exportado = true;
+
     }
 
+    public int getWIDTH() {
+        return WIDTH;
+    }
+
+    public int getHEIGHT() {
+        return HEIGHT;
+    }
 }

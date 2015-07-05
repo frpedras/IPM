@@ -11,11 +11,12 @@ import android.graphics.Paint;
 public class FoodPoint extends GameObject {
 
     private Bitmap image;
-
+    private GamePanel gp;
 
     private long viewtime=750;
 
     public FoodPoint (boolean bad, double x, double y, GamePanel gp) {
+        this.gp = gp;
         this.ft=FoodType.SCORE;
         this.x = x;
         this.y = y;
@@ -51,7 +52,7 @@ public class FoodPoint extends GameObject {
 
     @Override
     public void reporXDxy(){
-        this.dx=(int)(((GamePanel.WIDTH+width)/((viewtime/1000)*29)));
+        this.dx=(int)(((gp.getWIDTH()+width)/((viewtime/1000)*29)));
         this.dy=-9.8*((viewtime/1000)/2);
     }
 }

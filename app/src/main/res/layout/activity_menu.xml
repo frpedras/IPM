@@ -60,6 +60,7 @@
         android:text="@string/Bcredits"
         android:id="@+id/Bcredits"
         android:layout_marginBottom="10dp"
-        android:width="200dp"/>
+        android:width="200dp"
+        android:onClick="creditos"/>
 
 </LinearLayout>

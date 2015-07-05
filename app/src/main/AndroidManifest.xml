@@ -29,6 +29,11 @@
         </activity>
 
         <activity
+            android:name=".Creditos"
+            android:label="Creditos"
+            >
+        </activity>
+        <activity
             android:name=".ConfigurationsP"
             android:label="Configurations Patient"
             >

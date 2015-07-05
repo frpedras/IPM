@@ -3,6 +3,7 @@ package iscte.ipm.ipm;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -38,75 +40,148 @@ public class ConfigurationsA extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_configurations_a);
+        setContentView(R.layout.activity_configurations_p);
         volume = (SeekBar)findViewById(R.id.SBvolume);
         volumeControl();
 
-
-        beasy = (Button)findViewById(R.id.Beasy);
-        bmedium = (Button)findViewById(R.id.Bmedium);
         bhard = (Button)findViewById(R.id.Bhard);
-        bmedium.setText("Médio ✓");
+        bmedium = (Button)findViewById(R.id.Bmedium);
+        beasy = (Button)findViewById(R.id.Beasy);
+
+        String dificulty;
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        try {
+            dificulty = sharedPrefs.getString("dificulty", null);
+        } catch (Exception e) { dificulty = "m"; }
+
+        switch (dificulty){
+            case "e":
+                beasy.setText("Fácil ✓");
+                break;
+            case "h":
+                bhard.setText("Difícil ✓");
+                break;
+            case "m":
+                bmedium.setText("Médio ✓");
+                break;
+        }
+
 
         b1 = (ImageView)findViewById(R.id.IVbackground1);
         b2 = (ImageView)findViewById(R.id.IVbackground2);
         b3 = (ImageView)findViewById(R.id.IVbackground3);
         b4 = (ImageView)findViewById(R.id.IVbackground4);
 
-        b1.setBackgroundColor(Color.GREEN);
 
-    }
 
-    public void setDificulty(View v){
+        String bg,bgNumber;
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        try {
+            bg = sharedPref.getString("bg", null);
+            selectedImage(bg);
+        } catch (Exception e) {}
 
-        switch(v.getId()) {
-            case R.id.Beasy:
-                beasy.setText("Fácil ✓");
-                bmedium.setText("Médio");
-                bhard.setText("Difícil");
-                break;
+        try {
+            bgNumber = sharedPref.getString("bgNumber", null);
+        } catch (Exception e) {bgNumber="1";}
 
-            case R.id.Bmedium:
-                beasy.setText("Fácil");
-                bmedium.setText("Médio ✓");
-                bhard.setText("Difícil");
-                break;
-
-            case R.id.Bhard:
-                beasy.setText("Fácil");
-                bmedium.setText("Médio");
-                bhard.setText("Difícil ✓");
-                break;
-        }
-    }
-
-    public void changeBackground(View v){
-        switch(v.getId()){
-            case R.id.IVbackground1:
+        switch(bgNumber) {
+            case "1":
                 b1.setBackgroundColor(Color.GREEN);
                 b2.setBackgroundColor(Color.GRAY);
                 b3.setBackgroundColor(Color.GRAY);
                 b4.setBackgroundColor(Color.GRAY);
                 break;
-            case R.id.IVbackground2:
+            case "2":
                 b1.setBackgroundColor(Color.GRAY);
                 b2.setBackgroundColor(Color.GREEN);
                 b3.setBackgroundColor(Color.GRAY);
                 b4.setBackgroundColor(Color.GRAY);
                 break;
-            case R.id.IVbackground3:
+            case "3":
                 b1.setBackgroundColor(Color.GRAY);
                 b2.setBackgroundColor(Color.GRAY);
                 b3.setBackgroundColor(Color.GREEN);
                 b4.setBackgroundColor(Color.GRAY);
                 break;
-            case R.id.IVbackground4:
+            case "4":
                 b1.setBackgroundColor(Color.GRAY);
                 b2.setBackgroundColor(Color.GRAY);
                 b3.setBackgroundColor(Color.GRAY);
                 b4.setBackgroundColor(Color.GREEN);
                 break;
         }
+
+    }
+
+    public void setDificulty(View v){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final SharedPreferences.Editor editor = sp.edit();
+        switch(v.getId()) {
+            case R.id.Beasy:
+                beasy.setText("Fácil ✓");
+                bmedium.setText("Médio");
+                bhard.setText("Difícil");
+
+                editor.putString("dificulty", "e");
+                editor.commit();
+                break;
+
+            case R.id.Bmedium:
+                beasy.setText("Fácil");
+                bmedium.setText("Médio ✓");
+                bhard.setText("Difícil");
+
+                editor.putString("dificulty", "m");
+                editor.commit();
+                break;
+
+            case R.id.Bhard:
+                beasy.setText("Fácil");
+                bmedium.setText("Médio");
+                bhard.setText("Difícil ✓");
+
+                editor.putString("dificulty", "h");
+                editor.commit();
+                break;
+        }
+    }
+
+    public void changeBackground(View v){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final SharedPreferences.Editor editor = sp.edit();
+
+        switch(v.getId()){
+            case R.id.IVbackground1:
+                b1.setBackgroundColor(Color.GREEN);
+                b2.setBackgroundColor(Color.GRAY);
+                b3.setBackgroundColor(Color.GRAY);
+                b4.setBackgroundColor(Color.GRAY);
+                editor.putString("bgNumber", "1");
+                break;
+            case R.id.IVbackground2:
+                b1.setBackgroundColor(Color.GRAY);
+                b2.setBackgroundColor(Color.GREEN);
+                b3.setBackgroundColor(Color.GRAY);
+                b4.setBackgroundColor(Color.GRAY);
+                editor.putString("bgNumber", "2");
+                break;
+            case R.id.IVbackground3:
+                b1.setBackgroundColor(Color.GRAY);
+                b2.setBackgroundColor(Color.GRAY);
+                b3.setBackgroundColor(Color.GREEN);
+                b4.setBackgroundColor(Color.GRAY);
+                editor.putString("bgNumber", "3");
+                break;
+            case R.id.IVbackground4:
+                b1.setBackgroundColor(Color.GRAY);
+                b2.setBackgroundColor(Color.GRAY);
+                b3.setBackgroundColor(Color.GRAY);
+                b4.setBackgroundColor(Color.GREEN);
+                editor.putString("bgNumber", "4");
+                break;
+        }
+        editor.commit();
     }
 
     private void volumeControl(){
@@ -142,26 +217,6 @@ public class ConfigurationsA extends Activity {
         }
     }
 
-    public void save(View v){
-        if (v.getId() == R.id.Bsave){
-            Intent i = new Intent(ConfigurationsA.this, MenuPrincipal.class);
-            startActivity(i);
-        }
-    }
-
-    public void selectFood(View v){
-        if (v.getId() == R.id.Bselectfood){
-            Intent i = new Intent(ConfigurationsA.this, SelectFood.class);
-            startActivity(i);
-        }
-    }
-
-    public void selectAlerts(View v){
-        if (v.getId() == R.id.Balerts){
-            Intent i = new Intent(ConfigurationsA.this, Alerts.class);
-            startActivity(i);
-        }
-    }
     public void findImageButton(View v){
         lookForImage();
     }
@@ -183,7 +238,6 @@ public class ConfigurationsA extends Activity {
             if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK
                     && null != data) {
                 // Get the Image from data
-
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
@@ -197,11 +251,19 @@ public class ConfigurationsA extends Activity {
                 imgDecodableString = cursor.getString(columnIndex);
                 cursor.close();
 
-                ImageView imgView = (ImageView) findViewById(R.id.IVbackground4);
                 // Set the Image in ImageView after decoding the String
-                Bitmap resized = Bitmap.createScaledBitmap(BitmapFactory
-                        .decodeFile(imgDecodableString), 100, 100, true);
-                imgView.setImageBitmap(resized);
+
+                selectedImage(imgDecodableString);
+
+                // Save it
+
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                final SharedPreferences.Editor editor = sp.edit();
+                editor.putString("bg", imgDecodableString);
+                editor.commit();
+
+                editor.putString("bgNumber", "4");
+                editor.commit();
 
             } else {
                 Toast.makeText(this, "Não escolheu uma imagem",
@@ -213,5 +275,35 @@ public class ConfigurationsA extends Activity {
         }
 
     }
+
+    private void selectedImage(String imgpath){
+        ImageView imgView = (ImageView) findViewById(R.id.IVbackground4);
+        Bitmap resized = Bitmap.createScaledBitmap(BitmapFactory
+                .decodeFile(imgpath), 100, 100, true);
+        imgView.setImageBitmap(resized);
+    }
+
+    public void save(View v){
+        if (v.getId() == R.id.Bsave){
+            Intent i = new Intent(ConfigurationsA.this, MenuPrincipal.class);
+            startActivity(i);
+        }
+    }
+
+    public void selectFood(View v){
+        if (v.getId() == R.id.Bselectfood){
+            Intent i = new Intent(ConfigurationsA.this, SelectFood.class);
+            startActivity(i);
+        }
+    }
+
+    public void selectAlerts(View v){
+        if (v.getId() == R.id.Balerts){
+            Intent i = new Intent(ConfigurationsA.this, Alerts.class);
+            startActivity(i);
+        }
+    }
+
+
 
 }

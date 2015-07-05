@@ -52,4 +52,9 @@ public class MenuPrincipal extends Activity {
         Intent i = new Intent(MenuPrincipal.this, Game.class);
         startActivity(i);
     }
+
+    public void creditos(View v){
+        Intent i = new Intent(MenuPrincipal.this, Creditos.class);
+        startActivity(i);
+    }
 }

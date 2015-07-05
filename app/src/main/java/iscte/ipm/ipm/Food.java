@@ -16,6 +16,7 @@ public class Food extends GameObject {
     private String name;
     private typeOfFood type;
     private int number, stoptime, stopnumber;
+    private GamePanel gp;
 
     private long stopTime=600; //milis
 
@@ -25,7 +26,7 @@ public class Food extends GameObject {
 
 
     public Food(Bitmap image, FoodType ft,GamePanel gp, boolean bad) {
-
+        this.gp = gp;
         this.ft = ft;
         this.x = -image.getWidth();
         this.height = image.getHeight();
@@ -35,7 +36,7 @@ public class Food extends GameObject {
         if (bad)
             stopImage=(BitmapFactory.decodeResource(gp.getResources(), R.drawable.stopimage2));
 
-        this.dx=(int)(((GamePanel.WIDTH+width)/((viewtime/1000)*29)));
+        this.dx=(int)(((gp.getWIDTH()+width)/((viewtime/1000)*29)));
         this.dy=-9.8*((viewtime/1000)/2);
 
     }
@@ -59,7 +60,7 @@ public class Food extends GameObject {
             alive = true;
         }
         x += dx;
-        double rAltura =Math.random()*(GamePanel.HEIGHT-y);
+        double rAltura =Math.random()*(gp.getWIDTH()-y);
         y += dy;
         //dy+=(9.8)/45;
         dy+=(0.0000725*viewtime);
@@ -79,7 +80,7 @@ public class Food extends GameObject {
     @Override
     public void reporXDxy(){
         this.x = -image.getWidth();
-        this.dx=(int)(((GamePanel.WIDTH+width)/((viewtime/1000)*29)));
+        this.dx=(int)(((gp.getWIDTH()+width)/((viewtime/1000)*29)));
         this.dy=-9.8*((viewtime/1000)/2);
     }
 

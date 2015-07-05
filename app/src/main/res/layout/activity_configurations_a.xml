@@ -190,30 +190,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingTop="2dp">
-
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:text="@string/statistics"
-                android:id="@+id/Bstatistics"
-                android:layout_gravity="center_horizontal"
-                android:onClick="save" />
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/IVpaper"
-                android:src="@drawable/paper" />
-
-
-        </LinearLayout>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

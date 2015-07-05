@@ -49,7 +49,7 @@ public class Level {
         throwableFood.add(new Food(BitmapFactory.decodeResource(gp.getResources(), R.drawable.cereja01), FoodType.FRUITS,gp,false));
         double randomHeight ;
         for(GameObject f: throwableFood) {
-            randomHeight = Math.random() * (GamePanel.HEIGHT / 2) + (GamePanel.HEIGHT / 4);
+            randomHeight = Math.random() * (gp.getHEIGHT() / 2) + (gp.getHEIGHT() / 4);
             f.setY((int) randomHeight);
             f.setViewtime(f.getViewtime()-nerfFoodTime);
         }
@@ -58,10 +58,10 @@ public class Level {
 
     public void makeTutorial(){
         Food a = new Food(BitmapFactory.decodeResource(gp.getResources(), R.drawable.pera01),FoodType.FRUITS,gp,false);
-        a.setY((GamePanel.HEIGHT / 2) + (GamePanel.HEIGHT / 4));
+        a.setY((gp.getHEIGHT() / 2) + (gp.getHEIGHT() / 4));
         throwableFood.add(a);
         Food b = new Food(BitmapFactory.decodeResource(gp.getResources(), R.drawable.cachorro01),FoodType.FAST_FOOD,gp,true);
-        b.setY((GamePanel.HEIGHT / 2) + (GamePanel.HEIGHT / 4));
+        b.setY((gp.getHEIGHT() / 2) + (gp.getHEIGHT() / 4));
         throwableFood.add(b);
         setTutorial(true);
     }
@@ -117,7 +117,7 @@ public class Level {
     public void reset() {
 
         for(GameObject f: throwableFood) {
-            f.setY((GamePanel.HEIGHT / 2)+(GamePanel.HEIGHT / 4));
+            f.setY((gp.getHEIGHT() / 2)+(gp.getHEIGHT() / 4));
             f.reporXDxy();
         }
     }
