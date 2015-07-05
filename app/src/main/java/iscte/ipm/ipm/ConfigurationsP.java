@@ -57,6 +57,7 @@ public class ConfigurationsP extends Activity {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         try {
             dificulty = sharedPrefs.getString("dificulty", null);
+            dificulty.toString();
         } catch (Exception e) { dificulty = "m"; }
 
         switch (dificulty){
@@ -88,6 +89,7 @@ public class ConfigurationsP extends Activity {
 
         try {
             bgNumber = sharedPref.getString("bgNumber", null);
+            bgNumber.toString();
         } catch (Exception e) {bgNumber="1";}
 
         try {

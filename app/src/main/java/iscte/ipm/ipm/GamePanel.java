@@ -93,6 +93,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         String bgNumber, bgPath;
         try {
             bgNumber = sharedPref.getString("bgNumber", null);
+            bgNumber.toString();
         } catch (Exception e) {bgNumber="1";}
 
         try {
@@ -295,8 +296,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }else {
             canvas.drawText("Fim do Jogo!", 90, ((HEIGHT / 2) - 100), paint);
             canvas.drawText("Pontos: " + score , 110, ((HEIGHT / 2) + 50), paint);
-            if(!exportado)
-                export();
         }
 
     }
@@ -308,38 +307,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
 
-    public void export() {
-        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
-        String date = df.format(Calendar.getInstance().getTime());
-        String columnString = "\"Jogador\",\"DATA\",\"tempo_utilizacao\",\"dados\",\"alimentos_selecionados\",\"pontuacao\",\"acertos\",\"tempo_reacao\",";
-        String dataString = "\"" + "Jogador1" + "\",\"" + date + "\",\"" + (System.currentTimeMillis()-inicialGameTime)/1000+"s" + "\",\"" + "dados" + "\",\"" + "todos" + "\",\"" + score + "\",\"" + acertosTotal + "\",\"" + (deltaTimeTotal/foodTotal) + "\"";
-        String combinedString = columnString + "\n" + dataString;
-
-        File file = null;
-        File root = Environment.getExternalStorageDirectory();
-        if (root.canWrite()) {
-            File dir = new File(root.getAbsolutePath() + "/PersonData");
-            dir.mkdirs();
-            file = new File(dir, "Data.csv");
-            FileOutputStream out = null;
-            try {
-                out = new FileOutputStream(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            try {
-                out.write(combinedString.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
 
     public int getWIDTH() {
         return WIDTH;
